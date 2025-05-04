@@ -1,0 +1,75 @@
+import numpy as np 
+import matplotlib.pyplot as plt 
+from skimage import io, color 
+from skimage.transform import resize 
+from scipy.cluster.hierarchy import linkage, fcluster 
+from skimage.segmentation import mark_boundaries 
+
+# Step 1: Load an Image 
+image_path = 'FDP on Cybersecurity.jpg'  # Ensure the image file is present in this path
+image = io.imread('image_path')  # Image should be loaded correctly
+if image is None:
+    raise FileNotFoundError(f"Image at {image_path} not found")
+
+image_rgb = image / 255.0  # Normalize the image to [0, 1] range
+
+# Downsample the image to reduce the size (e.g., resize to 1/4 of the original size) 
+downsampled_image = resize(image_rgb, (image_rgb.shape[0] // 4, image_rgb.shape[1] // 4), 
+                            mode='reflect', anti_aliasing=True)
+
+# Show the original and downsampled image 
+plt.figure(figsize=(8, 6)) 
+plt.subplot(1, 2, 1) 
+plt.imshow(image_rgb) 
+plt.title('Original Image') 
+plt.axis('off') 
+plt.subplot(1, 2, 2) 
+plt.imshow(downsampled_image) 
+plt.title('Downsampled Image') 
+plt.axis('off') 
+plt.show() 
+
+# Step 2: Pre-process Image (Reshape for clustering) 
+# Flatten the downsampled image to make it suitable for clustering
+pixels = downsampled_image.reshape(-1, 3)  # Shape: (number_of_pixels, 3) 
+
+# Step 3: Use only a subset of pixels for clustering 
+# Select a subset of pixels randomly (e.g., 10,000 pixels) 
+subset_size = 10000 
+np.random.seed(42)  # For reproducibility 
+subset_indices = np.random.choice(pixels.shape[0], subset_size, replace=False) 
+subset_pixels = pixels[subset_indices] 
+
+# Step 4: Perform Hierarchical Clustering on the Subset of Pixels 
+Z = linkage(subset_pixels, method='ward')  # 'ward' minimizes variance within clusters 
+
+# Step 5: Assign clusters (we define a threshold to segment the image) 
+num_clusters = 5  # You can change the number of clusters 
+clusters = fcluster(Z, num_clusters, criterion='maxclust') 
+
+# Now, we need to apply these clusters to the full downsampled image (not just the subset)
+# Step 6: Map the clustering result back to the full image
+# We will create an array that holds the labels for the entire image and set those corresponding to the subset's indices. 
+cluster_labels_full = np.zeros(pixels.shape[0], dtype=int) 
+# Assign the clusters to the labels corresponding to the subset indices 
+cluster_labels_full[subset_indices] = clusters 
+# Reshape the cluster labels to the shape of the downsampled image 
+segmented_image = cluster_labels_full.reshape(downsampled_image.shape[0], 
+                                              downsampled_image.shape[1]) 
+
+# Step 7: Visualize the Segmented Image 
+plt.figure(figsize=(8, 6)) 
+plt.imshow(segmented_image, cmap='jet')  # Use 'jet' color map for better visualization 
+plt.title('Hierarchical Segmentation (Clustering)') 
+plt.axis('off') 
+plt.show() 
+
+# Step 8: Mark boundaries on the downsampled image 
+# Use mode='thick' to mark the boundaries
+boundaries = mark_boundaries(downsampled_image, segmented_image, color=(1, 0, 0), mode='thick') 
+# Show image with boundaries marked 
+plt.figure(figsize=(8, 6)) 
+plt.imshow(boundaries) 
+plt.title('Boundaries of Segments') 
+plt.axis('off') 
+plt.show()

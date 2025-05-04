@@ -1,0 +1,68 @@
+import matplotlib.pyplot as plt 
+import seaborn as sns 
+import numpy as np 
+from mpl_toolkits.mplot3d import Axes3D  # Import is required for 3D plotting, but not needed for scatter specifically
+
+# Sample data for the visualizations 
+categories = ['A', 'B', 'C', 'D', 'E'] 
+values = [10, 20, 15, 25, 30] 
+x = np.linspace(0, 10, 100)  # For line and scatter plots 
+y = np.sin(x)  # Line plot data 
+z = np.cos(x)  # For scatter plot 
+z3d = np.random.rand(5)  # 3D cube plot data 
+
+# ---------------------------------- Bar Chart ---------------------------------- 
+plt.figure(figsize=(8, 6)) 
+plt.bar(categories, values, color='skyblue') 
+plt.xlabel('Categories') 
+plt.ylabel('Values') 
+plt.title('Bar Chart') 
+plt.show() 
+
+# ------------------------------- Column Chart -------------------------------- 
+plt.figure(figsize=(8, 6)) 
+plt.barh(categories, values, color='lightcoral') 
+plt.xlabel('Values') 
+plt.ylabel('Categories') 
+plt.title('Column Chart (Horizontal Bar)') 
+plt.show() 
+
+# ------------------------------- Line Chart ----------------------------------- 
+plt.figure(figsize=(8, 6)) 
+plt.plot(x, y, label='sin(x)', color='blue') 
+plt.plot(x, z, label='cos(x)', color='green') 
+plt.xlabel('X-axis') 
+plt.ylabel('Y-axis') 
+plt.title('Line Chart') 
+plt.legend() 
+plt.show() 
+
+# ------------------------------- Scatter Plot -------------------------------- 
+plt.figure(figsize=(8, 6)) 
+plt.scatter(x, y, color='red', label='sin(x)') 
+plt.scatter(x, z, color='purple', label='cos(x)') 
+plt.xlabel('X-axis') 
+plt.ylabel('Y-axis') 
+plt.title('Scatter Plot') 
+plt.legend() 
+plt.show() 
+
+# ----------------------------- 3D Cube Plot (3D Scatter) ---------------------- 
+fig = plt.figure(figsize=(8, 6)) 
+ax = fig.add_subplot(111, projection='3d')  
+
+# Data for 3D plot (random cubes) 
+x3d = np.random.rand(5) 
+y3d = np.random.rand(5) 
+z3d = np.random.rand(5) 
+
+# 3D scatter plot 
+ax.scatter(x3d, y3d, z3d, c='r', marker='o')  
+
+# Label axes 
+ax.set_xlabel('X Label') 
+ax.set_ylabel('Y Label') 
+ax.set_zlabel('Z Label') 
+ax.set_title('3D Cube (Scatter Plot)') 
+
+plt.show()

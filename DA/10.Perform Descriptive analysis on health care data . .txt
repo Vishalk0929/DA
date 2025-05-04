@@ -1,0 +1,40 @@
+import pandas as pd 
+import numpy as np 
+import matplotlib.pyplot as plt 
+import seaborn as sns 
+
+# Create a sample healthcare dataset 
+data = { 
+    'Age': np.random.randint(20, 80, 100),  # Age between 20 and 80 
+    'Gender': np.random.choice(['Male', 'Female'], 100), 
+    'Blood Pressure': np.random.randint(90, 180, 100),  # BP between 90 and 180 
+    'Cholesterol': np.random.randint(100, 300, 100),  # Cholesterol between 100 and 300 
+    'Heart Disease': np.random.choice([0, 1], 100),  # 0 = No, 1 = Yes 
+} 
+
+# Create a DataFrame 
+df = pd.DataFrame(data) 
+
+# Descriptive statistics for numerical columns 
+print(df.describe()) 
+
+# Visualize the distribution of Age and Blood Pressure 
+plt.figure(figsize=(10, 5)) 
+sns.histplot(df['Age'], kde=True, color='blue', label='Age') 
+sns.histplot(df['Blood Pressure'], kde=True, color='green', label='Blood Pressure') 
+plt.legend() 
+plt.title('Age and Blood Pressure Distribution') 
+plt.show() 
+
+# Countplot for Gender distribution 
+plt.figure(figsize=(6, 4)) 
+sns.countplot(x='Gender', data=df, palette='Set1') 
+plt.title('Gender Distribution') 
+plt.show() 
+
+# Correlation heatmap for numerical variables 
+numeric_columns = df.select_dtypes(include=[np.number])  # Select numeric columns 
+plt.figure(figsize=(8, 6)) 
+sns.heatmap(numeric_columns.corr(), annot=True, cmap='coolwarm', linewidths=0.5) 
+plt.title('Correlation Heatmap') 
+plt.show()

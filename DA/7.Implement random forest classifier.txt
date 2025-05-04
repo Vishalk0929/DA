@@ -1,0 +1,62 @@
+import pandas as pd 
+import numpy as np 
+import matplotlib.pyplot as plt 
+from sklearn.model_selection import train_test_split 
+from sklearn.ensemble import RandomForestClassifier 
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report 
+
+# Step 1: Create a simple dataset for classification 
+data = { 
+    'Study_Hours': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],  # Number of hours studied 
+    'Marks': [30, 35, 40, 50, 60, 65, 70, 80, 90, 95],  # Marks obtained 
+    'Passed': [0, 0, 0, 0, 1, 1, 1, 1, 1, 1]  # 0=Fail, 1=Pass 
+} 
+
+# Convert the data into a pandas DataFrame 
+df = pd.DataFrame(data) 
+
+# Step 2: Visualize the data 
+plt.scatter(df['Study_Hours'], df['Marks'], c=df['Passed'], cmap='coolwarm', marker='o') 
+plt.xlabel('Study Hours') 
+plt.ylabel('Marks') 
+plt.title('Random Forest Classification Example') 
+plt.colorbar(label='Passed (1) / Failed (0)') 
+plt.show() 
+
+# Step 3: Split the data into features (X) and target (y) 
+X = df[['Study_Hours', 'Marks']]  # Features (independent variables) 
+y = df['Passed']  # Target (dependent variable) 
+
+# Step 4: Split the data into training and testing sets 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42) 
+
+# Step 5: Initialize and train the Random Forest Classifier model 
+model = RandomForestClassifier(n_estimators=100, random_state=42) 
+model.fit(X_train, y_train) 
+
+# Step 6: Make predictions using the trained model 
+y_pred = model.predict(X_test) 
+
+# Step 7: Evaluate the model performance 
+accuracy = accuracy_score(y_test, y_pred) 
+conf_matrix = confusion_matrix(y_test, y_pred) 
+class_report = classification_report(y_test, y_pred) 
+
+# Output the evaluation results 
+print(f'Accuracy: {accuracy}') 
+print(f'Confusion Matrix:\n{conf_matrix}') 
+print(f'Classification Report:\n{class_report}') 
+
+# Step 8: Visualize the Random Forest predictions 
+# Plot the original data points 
+plt.scatter(df['Study_Hours'], df['Marks'], c=df['Passed'], cmap='coolwarm', marker='o') 
+
+# Plot the predictions from the Random Forest model
+# Here, we will use the predicted probabilities of passing (class 1)
+plt.scatter(X_test['Study_Hours'], X_test['Marks'], c=y_pred, marker='x', s=100, label='Predictions', edgecolor='black') 
+plt.xlabel('Study Hours') 
+plt.ylabel('Marks') 
+plt.title('Random Forest Classifier - Predictions vs Actual') 
+plt.legend() 
+plt.colorbar(label='Passed (1) / Failed (0)') 
+plt.show()
