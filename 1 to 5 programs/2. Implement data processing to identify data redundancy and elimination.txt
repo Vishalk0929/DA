@@ -1,0 +1,30 @@
+import pandas as pd
+
+# Step 1: Create a simple student data dataset with some redundancy (duplicates)
+data = {
+    'StudentID': [101, 102, 103, 104, 105, 102, 106, 107, 105],
+    'Name': ['Alice', 'Bob', 'Charlie', 'David', 'Eva', 'Bob', 'Frank', 'Grace', 'Eva'],
+    'Age': [20, 21, 22, 23, 24, 21, 25, 26, 24],
+    'Grade': ['A', 'B', 'C', 'B', 'A', 'B', 'A', 'A', 'A']
+}
+
+# Create a DataFrame
+df = pd.DataFrame(data)
+
+# Display the original dataset with redundancy
+print("Original Dataset with Redundancy (Duplicates):")
+print(df)
+
+# Step 2: Identify and eliminate redundant data (duplicate rows)
+df_no_duplicates = df.drop_duplicates()
+
+# Step 3: Display the cleaned dataset (duplicates removed)
+print("\nCleaned Dataset (Duplicates Removed):")
+print(df_no_duplicates)
+
+# Step 4: Remove duplicates based on a particular column (e.g., StudentID)
+df_remove_particular_duplicates_in_column = df.drop_duplicates(subset='StudentID')
+
+# Display the result after removing duplicates based on StudentID
+print("\nDataset after Removing Duplicates Based on 'StudentID':")
+print(df_remove_particular_duplicates_in_column)

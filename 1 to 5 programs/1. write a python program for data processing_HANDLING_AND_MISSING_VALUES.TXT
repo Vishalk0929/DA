@@ -1,0 +1,28 @@
+import pandas as pd
+from sklearn.datasets import load_iris
+from scipy.ndimage import gaussian_filter
+import matplotlib.pyplot as plt
+
+data = pd.read_csv('data.csv')
+
+print("Original Data : \n", data)
+
+data['Age'].fillna(data['Age'].mean(), inplace=True)
+data['salary'].fillna(data['salary'].median(), inplace=True)
+
+print("In Data After Handling missing values \n", data)
+
+smoothed_salary = gaussian_filter(data['salary'], sigma=1)
+
+data['smoothed_salary'] = smoothed_salary
+
+print("In Data After Noise Removal : \n", data)
+
+plt.plot(data.index, data['salary'], label='original salary', marker='o')
+plt.plot(data.index, data['smoothed_salary'], label='smoothed_salary', marker='x')
+
+plt.title('Salary Data: Original vs Smoothed')
+plt.xlabel('Index')
+plt.ylabel('salary')
+plt.legend()
+plt.show()

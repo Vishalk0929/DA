@@ -1,0 +1,28 @@
+import pandas as pd
+import numpy as np
+from sklearn.impute import SimpleImputer
+
+# Step 1: Create a sample dataset with missing values (NaN)
+data = {
+    'StudentID': [101, 102, 103, 104, 105],
+    'Name': ['Alice', 'Bob', 'Charlie', 'David', 'Eva'],
+    'Age': [20, np.nan, 22, 23, np.nan],  # Missing values in 'Age'
+    'Grade': ['A', 'B', 'C', 'B', 'A']
+}
+
+# Create a DataFrame
+df = pd.DataFrame(data)
+
+# Display the original dataset with missing values
+print("Original Dataset with Missing Values:")
+print(df)
+
+# Step 2: Impute missing values in the 'Age' column using SimpleImputer (mean strategy)
+imputer = SimpleImputer(strategy='mean')  # Use the 'mean' strategy for imputation
+
+# Fit and transform, then flatten the result to 1D
+df['Age'] = imputer.fit_transform(df[['Age']]).ravel()
+
+# Display the dataset after imputation
+print("\nDataset After Imputation (Mean):")
+print(df)
